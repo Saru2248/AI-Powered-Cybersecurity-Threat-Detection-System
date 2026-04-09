@@ -164,9 +164,15 @@ pip install -r requirements.txt
 
 ## 🚀 How to Run
 
-### Full Pipeline — Data + Training + Detection + Visualization
+### Web Dashboard (Live UI)
+`ash
+python app.py
+`
+*Open http://localhost:5000 in your web browser to view the interactive SOC dashboard, where you can run the pipeline and simulate attacks with the click of a button.*
+
+### Full Pipeline (Terminal Mode) — Data + Training + Detection + Visualization
 ```bash
-python main.py
+python app.py 2>&1
 ```
 
 ### Train Only
@@ -303,3 +309,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 `#MachineLearning` `#Cybersecurity` `#Python` `#AnomalyDetection` `#RandomForest` `#IsolationForest` `#SOC` `#ThreatDetection` `#KDDCup` `#IDS`
 
 </div>
+

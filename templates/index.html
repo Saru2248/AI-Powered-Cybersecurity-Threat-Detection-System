@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cybersecurity SOC Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .btn {
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .btn:hover { background-color: #318bf0; }
+        .btn-secondary {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+        .btn-secondary:hover { background-color: #21262d; }
+        
+        /* Spinner */
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(13, 17, 23, 0.8);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-overlay h2 {
+            margin-top: 20px;
+            color: var(--primary);
+        }
+        .big-spinner {
+            width: 50px; height: 50px;
+            border: 4px solid rgba(88, 166, 255, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="big-spinner"></div>
+        <h2 id="loadingText">Processing...</h2>
+    </div>
+
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h2>ThreatDetect AI</h2>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="#"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="#models"><i class="fa-solid fa-brain"></i> Model Metrics</a></li>
+            <li><a href="#visuals"><i class="fa-solid fa-chart-pie"></i> Visualizations</a></li>
+            <li><a href="#alerts"><i class="fa-solid fa-bell"></i> Live Alerts</a></li>
+        </ul>
+        <div class="status-indicator">
+            <div class="dot pulse"></div> System Active
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Security Operations Center (SOC)</h1>
+        </header>
+
+        <!-- Command Center Actions -->
+        <div class="action-buttons">
+            <button class="btn" id="btn-pipeline" onclick="runPipeline()">
+                <i class="fa-solid fa-gears"></i> Run Full Pipeline (Train + Detect)
+                <div class="spinner" id="spin-pipeline"></div>
+            </button>
+            <button class="btn btn-secondary" id="btn-detect" onclick="runDetection()">
+                <i class="fa-solid fa-radar-satellite"></i> Simulate Live Threat (Detect 50)
+                <div class="spinner" id="spin-detect"></div>
+            </button>
+        </div>
+
+        <!-- Summary Widgets -->
+        <div class="widgets-grid">
+            <div class="widget">
+                <div class="widget-icon primary"><i class="fa-solid fa-network-wired"></i></div>
+                <div class="widget-info">
+                    <h3>Total Events</h3>
+                    <h2 id="val-total">0</h2>
+                </div>
+            </div>
+            <div class="widget">
+                <div class="widget-icon success"><i class="fa-solid fa-check-circle"></i></div>
+                <div class="widget-info">
+                    <h3>Normal Traffic</h3>
+                    <h2 id="val-normal">0</h2>
+                </div>
+            </div>
+            <div class="widget">
+                <div class="widget-icon danger"><i class="fa-solid fa-skull-crossbones"></i></div>
+                <div class="widget-info">
+                    <h3>Threats Detected</h3>
+                    <h2 id="val-threats">0</h2>
+                </div>
+            </div>
+            <div class="widget">
+                <div class="widget-icon warning"><i class="fa-solid fa-biohazard"></i></div>
+                <div class="widget-info">
+                    <h3>Detection Engine</h3>
+                    <h2>Active</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breakdown Section -->
+        <div class="section-container" id="alerts">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-list"></i> Recent Threat Alerts</h2>
+            </div>
+            <div class="table-container">
+                <table id="alerts-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Event ID</th>
+                            <th>Threat Type</th>
+                            <th>Confidence</th>
+                            <th>Anomaly Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alerts-body">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Visualizations -->
+        <div class="section-container" id="visuals">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-chart-area"></i> Analytics & Visualizations</h2>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Class Distribution</h3>
+                    <img id="img-01" src="/outputs/01_class_distribution.png" alt="Class Distribution">
+                </div>
+                <div class="chart-card">
+                    <h3>Threat Timeline</h3>
+                    <img id="img-07" src="/outputs/07_threat_timeline.png" alt="Threat Timeline">
+                </div>
+                <div class="chart-card">
+                    <h3>Confusion Matrix (Random Forest)</h3>
+                    <img id="img-03" src="/outputs/03_confusion_matrix_random_forest.png" alt="Confusion Matrix">
+                </div>
+                <div class="chart-card">
+                    <h3>Feature Importance</h3>
+                    <img id="img-05" src="/outputs/05_feature_importance.png" alt="Feature Importance">
+                </div>
+                 <div class="chart-card">
+                    <h3>Model Comparison</h3>
+                    <img id="img-08" src="/outputs/08_model_comparison.png" alt="Model Comparison">
+                </div>
+                 <div class="chart-card">
+                    <h3>Anomaly Score Distribution</h3>
+                    <img id="img-06" src="/outputs/06_anomaly_score_dist.png" alt="Anomaly Scores">
+                </div>
+                 <div class="chart-card full-width">
+                    <h3>Feature Correlation Heatmap</h3>
+                    <img id="img-02" src="/outputs/02_feature_correlation.png" alt="Correlation Heatmap">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        async function fetchResults() {
+            try {
+                const response = await fetch('/api/results');
+                const data = await response.json();
+                
+                if(data.error) return;
+
+                document.getElementById('val-total').innerText = data.summary.total_events;
+                document.getElementById('val-normal').innerText = data.summary.normal_events;
+                document.getElementById('val-threats').innerText = data.summary.threats_detected;
+
+                const tbody = document.getElementById('alerts-body');
+                tbody.innerHTML = '';
+                
+                const alerts = data.alerts.reverse();
+
+                alerts.forEach(alert => {
+                    if(!alert.is_threat) return;
+                    const row = document.createElement('tr');
+                    let badgeClass = "badge-danger";
+                    if(alert.threat_type === 'probe') badgeClass = "badge-warning";
+                    
+                    row.innerHTML = `
+                        <td>${alert.timestamp}</td>
+                        <td>${alert.event_id}</td>
+                        <td><span class="badge ${badgeClass}">${alert.threat_type.toUpperCase()}</span></td>
+                        <td>${alert.confidence}%</td>
+                        <td>${alert.anomaly_score !== "" ? alert.anomaly_score : "N/A"}</td>
+                        <td><span class="status-dot"></span> Blocked</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        function reloadImages() {
+            const v = new Date().getTime();
+            document.getElementById('img-01').src = "/outputs/01_class_distribution.png?v=" + v;
+            document.getElementById('img-02').src = "/outputs/02_feature_correlation.png?v=" + v;
+            document.getElementById('img-03').src = "/outputs/03_confusion_matrix_random_forest.png?v=" + v;
+            document.getElementById('img-05').src = "/outputs/05_feature_importance.png?v=" + v;
+            document.getElementById('img-06').src = "/outputs/06_anomaly_score_dist.png?v=" + v;
+            document.getElementById('img-07').src = "/outputs/07_threat_timeline.png?v=" + v;
+            document.getElementById('img-08').src = "/outputs/08_model_comparison.png?v=" + v;
+        }
+
+        async function runPipeline() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('loadingText').innerText = "Running Full ML Pipeline (Generating Data, Training, Analyzing)...";
+            try {
+                const res = await fetch('/api/run_pipeline', { method: 'POST' });
+                const json = await res.json();
+                if(json.error) alert("Error: " + json.details);
+                reloadImages();
+                await fetchResults();
+            } catch (e) { alert("Execution failed"); }
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        async function runDetection() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('loadingText').innerText = "Simulating Real-Time Threat Detection Events...";
+            try {
+                const res = await fetch('/api/run_detection', { method: 'POST' });
+                const json = await res.json();
+                if(json.error) alert("Error: " + json.details);
+                await fetchResults();
+            } catch (e) { alert("Execution failed"); }
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        fetchResults();
+        setInterval(fetchResults, 5000);
+    </script>
+</body>
+</html>
