@@ -1,4 +1,4 @@
-# Python
+# Python cache
 __pycache__/
 *.py[cod]
 *.pyo
@@ -20,18 +20,15 @@ ENV/
 .ipynb_checkpoints/
 *.ipynb
 
-# Data (large files)
-data/raw/*.csv
-data/raw/*.zip
-data/raw/*.gz
+# Large Data Files (do NOT track raw CSVs > 10MB)
+# data/raw/*.csv     <- comment out to track small datasets
+# data/raw/*.zip
+# data/raw/*.gz
 
-# Models (large binary files - optional to track)
-models/*.pkl
-models/*.joblib
-
-# Outputs
-outputs/*.png
-outputs/*.csv
+# Saved Models (binary, large -- optional to exclude)
+# Uncomment below if models are too large for GitHub (>100MB)
+# models/*.pkl
+# models/*.joblib
 
 # IDE
 .vscode/
