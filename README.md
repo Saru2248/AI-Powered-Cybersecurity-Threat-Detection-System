@@ -182,7 +182,7 @@ python main.py --mode train
 
 ### Detection Only (after training)
 ```bash
-python main.py --mode detect --events 30
+python main.py --mode detect --events 100
 ```
 
 ### Generate Extra RF Plots
@@ -249,9 +249,9 @@ python generate_rf_plots.py
 ======================================================================
   DETECTION SUMMARY
 ======================================================================
-  Total Events Analyzed  :  50
+  Total Events Analyzed  :  100
   Threats Detected       :  15
-  Normal Events          :  35
+  Normal Events          :  85
 
   Threat Breakdown:
     r2l_exfiltration     →   6 events  [HIGH]
@@ -310,3 +310,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 </div>
 
+#   - A I - P o w e r e d - C y b e r s e c u r i t y - T h r e a t - D e t e c t i o n - S y s t e m  
+ 
