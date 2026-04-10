@@ -1,104 +1,115 @@
 
 # 🚀 AI-Powered Cybersecurity Threat Detection System
 
-## 🔐 Machine Learning-Based Intrusion Detection System (IDS)
+<div align="center">
 
-An end-to-end cybersecurity project that detects and classifies network threats using **supervised and unsupervised machine learning**, inspired by real-world **SOC (Security Operations Center)** pipelines.
+![Python](https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge\&logo=python\&logoColor=white)
+![Machine Learning](https://img.shields.io/badge/ML-Random%20Forest-green?style=for-the-badge)
+![Flask](https://img.shields.io/badge/Backend-Flask-black?style=for-the-badge\&logo=flask)
+![Status](https://img.shields.io/badge/Status-Complete-brightgreen?style=for-the-badge)
+
+### 🔐 Real-Time Threat Detection with ML + Web Dashboard
+
+</div>
 
 ---
 
 ## 📌 Overview
 
-This project builds a threat detection pipeline capable of:
+This project implements a **Machine Learning-based Intrusion Detection System (IDS)** with a **real-time web dashboard**.
 
-* Classifying network traffic as **Normal** or **Malicious**
-* Identifying attack types:
+It simulates how a **Security Operations Center (SOC)** detects and responds to cyber threats using:
 
-  * DoS (Denial of Service)
-  * Probe / Port Scan
-  * Brute Force
-  * Data Exfiltration
-* Detecting **unknown anomalies** using Isolation Forest
-* Simulating **real-time SOC alerts** with severity levels
-
-> ⚠️ **Note:** Dataset is synthetic (modeled after KDD Cup & CICIDS). Results reflect controlled conditions.
+* Supervised learning (attack classification)
+* Unsupervised learning (anomaly detection)
+* Live alert visualization (Flask UI)
 
 ---
 
-## 🔴 Problem Statement
+## ⚡ What Makes This Project Strong
 
-Modern networks generate massive volumes of traffic where:
+Most student projects stop at model training.
+This one goes further:
 
-* Manual monitoring is impractical
-* Rule-based systems fail against evolving attacks
-* Zero-day threats go undetected
-
-This project addresses these challenges using **machine learning-based detection and anomaly analysis**.
+* ✅ Full ML pipeline (data → training → detection)
+* ✅ Real-time threat simulation engine
+* ✅ Interactive **Flask dashboard**
+* ✅ Visual analytics (plots + graphs)
+* ✅ Modular production-style structure (`src/`, `models/`, etc.)
 
 ---
 
-## 🧠 Key Features
+## 🧠 Features
 
-* Multi-class attack classification
-* Real-time detection simulation
-* Hybrid ML approach:
+* Detects:
 
-  * Random Forest (Primary)
-  * Logistic Regression (Baseline)
-  * Isolation Forest (Anomaly detection)
-* Severity-based alert system (**CRITICAL / HIGH / MEDIUM**)
-* Data visualization with multiple analytical plots
+  * DoS attacks
+  * Port scanning (Probe)
+  * Brute force attacks
+  * Data exfiltration
+* Identifies **unknown anomalies** using Isolation Forest
+* Assigns severity:
+
+  * CRITICAL / HIGH / MEDIUM
+* Generates:
+
+  * Confusion matrix
+  * ROC curve
+  * Feature importance
+  * Threat timeline
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category           | Technologies                                         |
-| ------------------ | ---------------------------------------------------- |
-| Language           | Python                                               |
-| ML Models          | Random Forest, Logistic Regression, Isolation Forest |
-| Data               | Pandas, NumPy                                        |
-| Visualization      | Matplotlib, Seaborn                                  |
-| Model Storage      | Joblib                                               |
-| Backend (Optional) | Flask                                                |
+| Layer           | Technology                                           |
+| --------------- | ---------------------------------------------------- |
+| Language        | Python                                               |
+| ML Models       | Random Forest, Logistic Regression, Isolation Forest |
+| Backend         | Flask                                                |
+| Data Processing | Pandas, NumPy                                        |
+| Visualization   | Matplotlib, Seaborn                                  |
+| Model Storage   | Joblib                                               |
 
 ---
 
 ## 🏗️ Architecture
 
-```
+```id="arch12"
 Network Traffic
       ↓
-Data Preprocessing
+Preprocessing
       ↓
 Feature Engineering
       ↓
-Machine Learning Models
-(Random Forest + Isolation Forest)
+ML Models
+(RF + Isolation Forest)
       ↓
 Threat Classification
       ↓
 Severity Assignment
       ↓
-Alert Engine + Visualization
+Flask Dashboard + Alerts
 ```
 
 ---
 
 ## 📁 Project Structure
 
-```
-AI-Cybersecurity-Threat-Detection/
+```id="struct99"
+├── data/               # Raw & processed datasets
+├── docs/               # Documentation
+├── images/             # README visuals
+├── models/             # Saved ML models
+├── outputs/            # Generated results & plots
+├── src/                # Core ML pipeline
 │
-├── data/
-├── src/
-├── models/
-├── outputs/
-├── images/
-├── docs/
+├── static/css/         # Dashboard styling
+├── templates/          # Flask HTML UI
 │
-├── app.py
-├── main.py
+├── app.py              # Web dashboard
+├── main.py             # Pipeline controller
+├── generate_rf_plots.py
 ├── requirements.txt
 └── README.md
 ```
@@ -121,81 +132,71 @@ pip install -r requirements.txt
 
 ## 🚀 Usage
 
-### Run Full Pipeline
+### 🔹 Run Full Pipeline
 
 ```bash
 python main.py
 ```
 
-### Train Model
+### 🔹 Train Model
 
 ```bash
 python main.py --mode train
 ```
 
-### Run Detection
+### 🔹 Run Detection
 
 ```bash
 python main.py --mode detect --events 100
 ```
 
-### Launch Web Dashboard
+### 🔹 Launch Web Dashboard
 
 ```bash
 python app.py
 ```
 
+👉 Open: **[http://localhost:5000](http://localhost:5000)**
+
 ---
 
 ## 📊 Results
 
-* Strong classification performance on structured data
-* Effective anomaly detection for unknown patterns
-* Clear feature importance and interpretability
+* High classification accuracy on structured dataset
+* Effective anomaly detection for unknown threats
+* Clear model interpretability via feature importance
 
-> ⚠️ Real-world datasets will yield more realistic performance (~90–97% F1-score)
+> ⚠️ Real-world datasets will produce lower but more realistic performance (~90–97% F1)
 
 ---
 
 ## 🔍 Attack Types
 
-| Attack Type       | Description                |
-| ----------------- | -------------------------- |
-| DoS               | Traffic flooding           |
-| Probe             | Port scanning              |
-| Brute Force       | Repeated login attempts    |
-| Data Exfiltration | Unauthorized data transfer |
+| Attack       | Description      |
+| ------------ | ---------------- |
+| DoS          | Traffic flooding |
+| Probe        | Port scanning    |
+| Brute Force  | Login attacks    |
+| Exfiltration | Data theft       |
 
 ---
 
 ## ⚠️ Limitations
 
-* Synthetic dataset (not real production traffic)
-* Limited feature complexity
-* No real-time streaming pipeline
-* No distributed processing
+* Synthetic dataset
+* Not tested on real production traffic
+* No distributed/streaming pipeline
+* No deep learning models
 
 ---
 
 ## 🔮 Future Improvements
 
-* Use real datasets (CICIDS, UNSW-NB15)
-* Deep learning models (LSTM, Autoencoders)
-* Real-time streaming (Kafka, Spark)
-* SIEM integration (Splunk / ELK)
-* REST API deployment
-
----
-
-## 🏢 Industry Relevance
-
-Concepts aligned with systems used by:
-
-* Palo Alto Networks
-* CrowdStrike
-* Darktrace
-* IBM (QRadar)
-* Splunk
+* Real datasets (CICIDS, UNSW-NB15)
+* Kafka + Spark streaming
+* Deep learning (LSTM / Autoencoder)
+* Cloud deployment
+* SIEM integration
 
 ---
 
@@ -204,13 +205,11 @@ Concepts aligned with systems used by:
 **Sarthak Dhumal**
 
 * GitHub: [https://github.com/Saru2248](https://github.com/Saru2248)
-* LinkedIn: (Add your profile link)
+* LinkedIn: (https://www.linkedin.com/in/sarthak-dhumal-07555a211/)
 
 ---
 
 ## ⭐ Support
 
-If you found this project useful, consider giving it a star ⭐
-
----
+If this project helped you, give it a star ⭐
 
