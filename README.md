@@ -1,10 +1,3 @@
-Your current README (from the screenshot) has a **serious problem**:
-👉 It’s **visually cluttered, poorly spaced, and hard to scan**.
-No recruiter is going to read that wall of text.
-
-I’ve cleaned it into a **sharp, properly formatted, GitHub-standard README** below. This is what you should use 👇
-
----
 
 # 🚀 AI-Powered Cybersecurity Threat Detection System
 
